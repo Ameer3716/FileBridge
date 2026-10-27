@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {makePath,parsePath,downloadName,record,sameOrigin} from '../lib/files.mjs';
+const id='12345678-1234-1234-1234-123456789abc',hash='a'.repeat(64);
+test('identical filenames have independent paths and recover Unicode names',()=>{const a=makePath(id,123,hash,'Sales پاکستان.xlsx'),b=makePath('abcdef12-1234-1234-1234-123456789abc',123,hash,'Sales پاکستان.xlsx');assert.notEqual(a,b);assert.deepEqual(parsePath(a),{id,modifiedAt:123,sha256:hash,name:'Sales پاکستان.xlsx'})});
+test('uploaded time comes from storage, not the computer clock',()=>{const r=record({pathname:makePath(id,1,hash,'report.xlsx'),size:123,uploadedAt:new Date('2026-10-27T20:00:00Z')});assert.equal(r.uploadedAt,Date.parse('2026-10-27T20:00:00Z'));assert.equal(r.modifiedAt,1)});
+test('download names handle PKT midnight rollover and retain Excel extension',()=>{assert.equal(downloadName('sales.final.xlsx',Date.parse('2026-10-27T20:00:00Z'),id),'sales.final__20261028_010000_PKT_12345678.xlsx')});
+test('unknown or malformed paths are rejected',()=>{assert.equal(parsePath('../secret'),null);assert.equal(parsePath(`files/${id}/1/${hash}/%ZZ`),null);assert.equal(parsePath(`files/${id}/1/${hash}/%2fetc`),null)});
+test('unsafe names are sanitized without merging upload identities',()=>{assert.equal(parsePath(makePath(id,0,hash,'a/b\\c.xlsx')).name,'a_b_c.xlsx');assert.equal(parsePath(makePath(id,0,hash,'')).name,'untitled')});
+test('cross-origin mutations are rejected',()=>{assert.equal(sameOrigin(new Request('https://files.example/api/upload',{headers:{origin:'https://other.example'}})),false);assert.equal(sameOrigin(new Request('https://files.example/api/upload',{headers:{origin:'https://files.example'}})),true)});
