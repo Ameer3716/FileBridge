@@ -23,7 +23,7 @@ The storage connection is a one-time owner setup. Visitors never sign into Verce
 - Every displayed date and time uses **Pakistan Standard Time (PKT / UTC+5)**.
 - Every upload has its own UUID. Identical names and identical content do not overwrite earlier uploads.
 - Matching filenames show “Latest upload” and “Earlier upload”. “Latest” means latest uploaded, not necessarily latest edited; inspect the modified time when comparing revisions.
-- Downloads preserve file contents and add the upload timestamp and upload ID to the filename, for example `Report__20261027_142530_PKT_a1b2c3d4.xlsx`.
+- Downloads preserve file contents and the original uploaded filename, including its extension. Duplicate uploads remain separate by their upload IDs.
 - File details show exact byte size, upload ID, original modified time, and a SHA-256 fingerprint calculated by the browser before upload.
 - Delete an individual upload from its details panel, with confirmation.
 - Up to **25 MiB (26,214,400 bytes)** per file. Files upload directly to Blob, avoiding the serverless request-body upload limit. Large files use multipart uploads; downloads are streamed by the server.
@@ -54,7 +54,7 @@ npm run build
 
 ## Validation
 
-The ZIP includes tests for duplicate-name isolation, Unicode filenames, filename sanitization, server timestamps, PKT midnight rollover, download extensions, and cross-origin mutation rejection. Production build and TypeScript are checked before delivery. Live uploads/downloads require your connected Blob store and must be checked after deployment; no storage credentials are included.
+The ZIP includes tests for duplicate-name isolation, Unicode filenames, filename sanitization, server timestamps, original download filenames and extensions, and cross-origin mutation rejection. Production build and TypeScript are checked before delivery. Live uploads/downloads require your connected Blob store and must be checked after deployment; no storage credentials are included.
 
 ## Project structure
 

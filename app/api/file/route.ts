@@ -13,7 +13,7 @@ export async function GET(request:Request){
   // Reconstructing a URL from pathname can resolve to a different object.
   const result=await get(blob.url,{access:'private',useCache:false});
   if(!result||result.statusCode!==200||!result.stream)return error('File not found.',404);
-  const filename=downloadName(f.name,f.uploadedAt,f.id);
+  const filename=downloadName(f.name);
   const encoded=encodeURIComponent(filename).replace(/['()*]/g,c=>'%'+c.charCodeAt(0).toString(16));
   // Stream files; do not buffer large downloads inside the function.
   return new Response(result.stream,{headers:{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename="download"; filename*=UTF-8''${encoded}`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});

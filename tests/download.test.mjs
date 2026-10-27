@@ -37,7 +37,7 @@ for(const name of ['report.xlsx','Sales report.xlsx','Sales پاکستان.xlsx'
   assert.equal(response.status,200,await (response.ok?Promise.resolve(''):response.clone().text()));
   assert.deepEqual(new Uint8Array(await response.arrayBuffer()),bytes);
   const filename=decodeURIComponent(response.headers.get('Content-Disposition').split("filename*=UTF-8''")[1]);
-  assert.equal(filename,files.downloadName(name,Date.parse('2026-10-27T20:00:00Z'),id));
+  assert.equal(filename,name);
  });
 }
 test('missing upload returns 404 without fetching storage contents',async()=>{
