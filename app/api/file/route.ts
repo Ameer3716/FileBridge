@@ -9,7 +9,9 @@ export async function GET(request:Request){
  try{
   const blob=await find(request);if(!blob)return error('File not found. Refresh the list.',404);
   const f=record(blob);if(!f)return error('Invalid file record.',404);
-  const result=await get(blob.pathname,{access:'private',useCache:false});
+  // Blob's canonical URL preserves escaping in stored filenames (for example %20).
+  // Reconstructing a URL from pathname can resolve to a different object.
+  const result=await get(blob.url,{access:'private',useCache:false});
   if(!result||result.statusCode!==200||!result.stream)return error('File not found.',404);
   const filename=downloadName(f.name,f.uploadedAt,f.id);
   const encoded=encodeURIComponent(filename).replace(/['()*]/g,c=>'%'+c.charCodeAt(0).toString(16));
