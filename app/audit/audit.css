@@ -1,0 +1,228 @@
+.audit-page {
+  min-height: 100vh;
+}
+.audit-header {
+  padding: 16px max(20px, calc((100vw - 1200px) / 2));
+  background: white;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.audit-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+.audit-main {
+  max-width: 1240px;
+  padding: 36px 20px;
+  margin: auto;
+  min-width: 0;
+}
+.audit-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.audit-intro p,
+.audit-panel p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.audit-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.audit-panel {
+  min-width: 0;
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin: 22px 0;
+}
+.audit-panel h2 {
+  font-size: 19px;
+  margin: 0 0 16px;
+}
+.audit-welcome {
+  padding: 40px 24px;
+}
+.audit-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.audit-fields label,
+.audit-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  min-width: 0;
+  line-height: 1.6;
+}
+.audit-page input,
+.audit-page select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 44px;
+  border: 1px solid #cfdcd3;
+  border-radius: 7px;
+  padding: 8px 11px;
+  background: white;
+  color: var(--ink);
+  font-size: 16px;
+}
+.audit-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+.audit-actions .button {
+  min-height: 44px;
+}
+.audit-status {
+  background: #eaf3ec;
+  color: #276b52;
+  padding: 14px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.audit-alert {
+  background: #fff3e8;
+  border: 1px solid #e9c8aa;
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  margin: 16px 0;
+}
+.audit-alert .button {
+  margin: 6px;
+}
+.audit-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.audit-summary > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  min-width: 0;
+}
+.audit-summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.audit-summary strong {
+  font-size: 23px;
+  overflow-wrap: anywhere;
+}
+.audit-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 22px;
+}
+.entry-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.entry-fields label:nth-child(2) {
+  grid-column: 1/-1;
+}
+.audit-results {
+  max-height: 650px;
+  overflow: auto;
+}
+.audit-results article {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.audit-results article > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.audit-results span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.audit-results button {
+  min-height: 44px;
+  flex-shrink: 0;
+}
+@media (max-width: 850px) {
+  .audit-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .audit-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .audit-results {
+    max-height: none;
+  }
+}
+@media (max-width: 580px) {
+  .audit-header {
+    padding: 14px 16px;
+  }
+  .audit-main {
+    padding: 26px 16px;
+  }
+  .audit-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .entry-fields label:nth-child(2) {
+    grid-column: auto;
+  }
+  .audit-panel {
+    padding: 20px 16px;
+  }
+  .audit-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .audit-summary > div {
+    padding: 16px;
+  }
+  .audit-summary strong {
+    font-size: 20px;
+  }
+  .audit-intro h1 {
+    max-width: none;
+  }
+  .workspace-tabs a {
+    padding: 10px;
+    font-size: 11px;
+  }
+  .audit-actions .button {
+    flex: 1;
+  }
+  .audit-header .workspace-tabs {
+    width: 100%;
+  }
+  .audit-results article {
+    align-items: flex-start;
+  }
+}

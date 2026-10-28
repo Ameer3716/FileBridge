@@ -76,3 +76,5 @@ main,.intro>div,.stats>div,.stats>div>div,.section-heading>div,.file-cell>div{mi
  .modal-backdrop{padding:12px}.modal{max-height:calc(100dvh - 24px);padding:24px 18px}
  footer{flex-wrap:wrap;line-height:1.6}
 }
+
+.workspace-tabs{display:flex;flex-wrap:wrap;gap:6px;min-width:0}.workspace-tabs a{font-size:12px;padding:11px 13px;border-radius:8px;min-height:44px;display:flex;align-items:center}.workspace-tabs a[aria-current=page]{background:#eaf3ec;color:#276b52;font-weight:650}
