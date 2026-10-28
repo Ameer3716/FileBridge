@@ -438,19 +438,21 @@ export default function AuditEditor() {
                 </h2>
                 <p>
                   In H = physically counted stock. In S = stock in your ERP.
-                  Balance = In H − In S.
+                  Balance = In H − In S. Physical quantity and unit cost are
+                  optional; leaving either blank saves 0.
                 </p>
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     void run(async () => {
-                      saveEntry(sheet(), form, editing);
+                      const savedKey = saveEntry(sheet(), form, editing);
                       setEntries(readEntries(sheet()));
+                      setSearch("");
                       await persist(workbook.current!);
                       setNotice(
                         editing
                           ? "Existing product updated. No new row added."
-                          : "Product added once.",
+                          : `Product added to ${savedKey.startsWith("0:") ? "left" : "right"} section, Excel row ${savedKey.split(":")[1]}.`,
                       );
                       setForm(blank);
                       setEditing(null);
@@ -474,7 +476,14 @@ export default function AuditEditor() {
                         }
                         <input
                           disabled={busy}
-                          required
+                          required={
+                            key === "id" || key === "name" || key === "system"
+                          }
+                          placeholder={
+                            key === "physical" || key === "cost"
+                              ? "Optional — defaults to 0"
+                              : undefined
+                          }
                           inputMode={
                             key === "id"
                               ? "text"

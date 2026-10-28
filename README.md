@@ -77,7 +77,7 @@ Open **Audit workbook** (`/audit`) separately from File transfer. Import the two
 
 - Edit report title/product group, audit date (weekday shown), store/department, last-audit label, preparer, and download filename.
 - Search by Product ID/barcode or name. New IDs are checked across both panels, ignoring surrounding spaces and letter case. Existing duplicates are reported, not silently removed. Leading-zero text IDs remain text.
-- Enter product name, physical quantity (In H), ERP/system quantity (In S), and unit cost. Edit an existing row to replace its quantities; the app does not automatically add repeated counts.
+- Enter product name and ERP/system quantity (In S). Physical quantity (In H) and unit cost are optional and default to zero when blank. Edit an existing row to replace its quantities; the app does not automatically add repeated counts.
 - Original Excel formulas remain in place. The browser shows balance/value and shortage/excess/net totals for this template; Excel recalculates on opening the export. Import rejects other sheet layouts. The 136 entry slots are fixed so adding products never overwrites the report totals.
 - Save the product form and report details, then download XLSX. Saved workbook changes are retained in IndexedDB on this browser. Storage failures are reported; download regularly for backup. A new import replaces the local draft after confirmation. Unsaved form fields are not part of the export.
 - Drafts are local, not a shared database. Use one editor at a time. To move devices, download the edited workbook and transfer it using the existing File transfer tab. Duplicate checks apply to the currently imported worksheet, not other workbooks or separate device drafts.

@@ -74,7 +74,7 @@ test("shortage, excess and net totals use both panels", () => {
 });
 test("invalid quantities and missing formulas do not modify data", () => {
   const { s } = template();
-  for (const cost of ["", -1, "bad", Infinity])
+  for (const cost of [-1, "bad", Infinity])
     assert.throws(() => saveEntry(s, { ...product(), cost }));
   s.getCell("H5").value = null;
   assert.throws(() => saveEntry(s, product()), /formula/);
@@ -150,4 +150,45 @@ test("export retains duplicate-highlighting rules unsupported by the XLSX writer
   assert.ok(
     (await exported.file("xl/styles.xml").async("string")).includes(styles),
   );
+});
+
+test("blank physical quantity and unit cost add a row as zeros", async () => {
+  const { w, s } = template();
+  saveEntry(s, { ...product(), physical: "", cost: "" });
+  assert.equal(readEntries(s).length, 1);
+  assert.equal(s.getCell("D5").value, 0);
+  assert.equal(s.getCell("G5").value, 0);
+  assert.equal(s.getCell("F5").result, -10);
+  assert.equal(s.getCell("H5").result, 0);
+  const copy = new ExcelJS.Workbook();
+  await copy.xlsx.load(await w.xlsx.writeBuffer());
+  assert.equal(copy.worksheets[0].getCell("D5").value, 0);
+  assert.equal(copy.worksheets[0].getCell("G5").value, 0);
+});
+test("zero-filled template placeholders do not occupy product slots", () => {
+  const { s } = template();
+  for (let r = 5; r <= 72; r++)
+    for (const col of [4, 5, 7, 12, 13, 15]) s.getCell(r, col).value = 0;
+  assert.equal(readEntries(s).length, 0);
+  assert.equal(saveEntry(s, product()), "0:5");
+  assert.equal(readEntries(s).length, 1);
+});
+test("blank optional values also update an existing entry to zero", () => {
+  const { s } = template();
+  const key = saveEntry(s, product());
+  saveEntry(s, { ...product(), physical: "  ", cost: undefined }, key);
+  assert.equal(readEntries(s).length, 1);
+  assert.equal(s.getCell("D5").value, 0);
+  assert.equal(s.getCell("G5").value, 0);
+});
+test("ERP quantity remains required and invalid optional numbers are rejected", () => {
+  const { s } = template();
+  assert.throws(
+    () => saveEntry(s, { ...product(), system: "" }),
+    /ERP quantity/,
+  );
+  for (const key of ["physical", "cost"])
+    for (const value of [-1, "bad", Infinity])
+      assert.throws(() => saveEntry(s, { ...product(), [key]: value }));
+  assert.equal(readEntries(s).length, 0);
 });
