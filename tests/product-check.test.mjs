@@ -101,3 +101,56 @@ test("unrecognized sheets are reported as unchecked and unsupported files fail c
   const bytes = await w.xlsx.writeBuffer();
   await assert.rejects(() => loadProductCheck(bytes), /No product table/);
 });
+
+test("deleting an audit product keeps the other product on the same Excel row and its formulas", async () => {
+  const workbook = new ExcelJS.Workbook(),
+    sheet = workbook.addWorksheet("Audit");
+  for (const a of ["B4", "J4"]) sheet.getCell(a).value = "B/C";
+  for (const a of ["C4", "K4"]) sheet.getCell(a).value = "Product Name";
+  for (const [a, formula] of [
+    ["F5", "D5-E5"],
+    ["H5", "F5*G5"],
+    ["N5", "L5-M5"],
+    ["P5", "N5*O5"],
+    ["F78", 'SUMIF(H5:H72,"<0")+SUMIF(P5:P72,"<0")'],
+    ["F80", 'SUMIF(H5:H76,">0")+SUMIF(P5:P76,">0")'],
+    ["F82", "SUM(F78:I80)"],
+  ])
+    sheet.getCell(a).value = { formula };
+  for (const [a, value] of [
+    ["B5", "A"],
+    ["C5", "Milk"],
+    ["D5", 5],
+    ["E5", 2],
+    ["G5", 10],
+    ["J5", "A"],
+    ["K5", "Milk"],
+    ["L5", 9],
+    ["M5", 4],
+    ["O5", 20],
+  ])
+    sheet.getCell(a).value = value;
+  const session = { workbook, dirty: false };
+  clearProduct(
+    session,
+    scanProducts(session).rows.find((r) => r.idCol === 2).key,
+  );
+  for (const a of ["B5", "C5", "D5", "E5", "G5"])
+    assert.equal(sheet.getCell(a).value, null);
+  assert.equal(sheet.getCell("J5").value, "A");
+  assert.equal(sheet.getCell("K5").value, "Milk");
+  assert.equal(sheet.getCell("L5").value, 9);
+  assert.equal(sheet.getCell("M5").value, 4);
+  assert.equal(sheet.getCell("O5").value, 20);
+  assert.equal(sheet.getCell("F5").formula, "D5-E5");
+  assert.equal(sheet.getCell("H5").formula, "F5*G5");
+  assert.equal(sheet.getCell("N5").formula, "L5-M5");
+  assert.equal(sheet.getCell("P5").result, 100);
+  assert.equal(sheet.getCell("F80").result, 100);
+  assert.equal(scanProducts(session).rows.length, 1);
+  const copy = new ExcelJS.Workbook();
+  await copy.xlsx.load(await exportCheckedProducts(session));
+  assert.equal(copy.worksheets[0].getCell("J5").value, "A");
+  assert.equal(copy.worksheets[0].getCell("B5").value, null);
+  assert.equal(copy.worksheets[0].getCell("N5").formula, "L5-M5");
+});

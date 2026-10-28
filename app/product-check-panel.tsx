@@ -213,7 +213,7 @@ export default function ProductCheckPanel({
                             setError("");
                           }}
                         >
-                          Edit row {row.row}
+                          Edit values
                         </button>
                         <button
                           className="button danger"
@@ -221,7 +221,7 @@ export default function ProductCheckPanel({
                           onClick={() => {
                             if (
                               !confirm(
-                                `Clear ${row.name || row.id} from ${row.sheetName}, row ${row.row}? Its quantities and cost will be cleared. Formulas remain. Counts are not merged into another entry.`,
+                                `Delete the complete entry for ${row.name || row.id} from ${row.sheetName}, row ${row.row}? This removes its Product ID, name, quantities and unit cost. The other product on the same Excel row and all template formulas will be kept. Counts will not be merged.`,
                               )
                             )
                               return;
@@ -233,12 +233,12 @@ export default function ProductCheckPanel({
                               setError(
                                 e instanceof Error
                                   ? e.message
-                                  : "Could not clear entry.",
+                                  : "Could not delete product entry.",
                               );
                             }
                           }}
                         >
-                          Clear entry
+                          Delete product entry
                         </button>
                       </div>
                     )}
