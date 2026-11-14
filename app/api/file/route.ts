@@ -16,7 +16,7 @@ export async function GET(request:Request){
   const filename=downloadName(f.name);
   const encoded=encodeURIComponent(filename).replace(/['()*]/g,c=>'%'+c.charCodeAt(0).toString(16));
   // Stream files; do not buffer large downloads inside the function.
-  return new Response(result.stream,{headers:{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename="download"; filename*=UTF-8''${encoded}`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+  return new Response(result.stream,{headers:{'Content-Type':'application/octet-stream','Content-Length':String(blob.size),'Content-Disposition':`attachment; filename="download"; filename*=UTF-8''${encoded}`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
  }catch{return error('Download failed. Please retry.',500)}
 }
 export async function DELETE(request:Request){
